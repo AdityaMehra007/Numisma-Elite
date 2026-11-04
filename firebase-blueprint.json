@@ -1,0 +1,117 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account profile and membership level in Numisma Elite",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Unique user identifier matching Firebase Auth UID" },
+        "displayName": { "type": "string", "description": "Collector or dealer display name" },
+        "email": { "type": "string", "description": "Account email address" },
+        "tier": { "type": "string", "enum": ["EXPLORER", "COLLECTOR_ELITE", "PROFESSIONAL", "INSTITUTIONAL"], "description": "Subscription tier" },
+        "avatarUrl": { "type": "string", "description": "Profile picture URL" },
+        "bio": { "type": "string", "description": "Collector biographical notes and research interests" },
+        "country": { "type": "string", "description": "Country of residence" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Account registration timestamp via serverTimestamp()" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Profile update timestamp via serverTimestamp()" }
+      },
+      "required": ["userId", "displayName", "email", "tier", "createdAt", "updatedAt"]
+    },
+    "Specimen": {
+      "title": "Specimen",
+      "description": "Individual physical coin specimen in the collector's private digital vault",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Document identifier" },
+        "userId": { "type": "string", "description": "Owner user UID" },
+        "coinName": { "type": "string", "description": "Descriptive or catalog coin title" },
+        "catalogId": { "type": "string", "description": "Universal catalog reference (e.g. RIC II 220, KM#45)" },
+        "issuingAuthority": { "type": "string", "description": "Ruler, republic, or government authority" },
+        "era": { "type": "string", "description": "Historical era or civilization" },
+        "year": { "type": "string", "description": "Year or date range" },
+        "denomination": { "type": "string", "description": "Face value denomination (e.g. Denarius, Stater, Mohur, Sovereign)" },
+        "metal": { "type": "string", "description": "Metallic composition (Gold, Silver, Bronze, Electrum, Platinum, etc.)" },
+        "grade": { "type": "string", "description": "Condition grade (e.g. MS65, AU58, XF45, VF30, Fine, Raw)" },
+        "gradingService": { "type": "string", "description": "Certification service (NGC, PCGS, ANACS, ICG, Raw)" },
+        "certificationNumber": { "type": "string", "description": "Slab cert number for authenticity verification" },
+        "measuredWeightGrams": { "type": "number", "description": "Measured weight in grams" },
+        "measuredDiameterMm": { "type": "number", "description": "Measured diameter in millimeters" },
+        "acquisitionCost": { "type": "number", "description": "Purchase price paid" },
+        "acquisitionCurrency": { "type": "string", "description": "Currency of purchase" },
+        "acquisitionDate": { "type": "string", "description": "Date of acquisition" },
+        "currentEstimatedValue": { "type": "number", "description": "Current market valuation estimate" },
+        "provenance": { "type": "string", "description": "Recorded chain of ownership and prior auction pedigree" },
+        "notes": { "type": "string", "description": "Private collection notes" },
+        "imageUrl": { "type": "string", "description": "Primary high-resolution photograph URL or asset path" },
+        "isForSale": { "type": "boolean", "description": "Whether the coin is marked available for marketplace trade" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp via serverTimestamp()" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last update timestamp via serverTimestamp()" }
+      },
+      "required": ["userId", "coinName", "grade", "gradingService", "createdAt", "updatedAt"]
+    },
+    "Listing": {
+      "title": "Listing",
+      "description": "Marketplace trade or auction offering for a coin",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Listing ID" },
+        "userId": { "type": "string", "description": "Seller user UID" },
+        "sellerName": { "type": "string", "description": "Public seller username or dealer brand" },
+        "specimenId": { "type": "string", "description": "Optional linked specimen ID" },
+        "coinTitle": { "type": "string", "description": "Title of the coin offered" },
+        "country": { "type": "string", "description": "Origin country / empire" },
+        "era": { "type": "string", "description": "Historical period" },
+        "metal": { "type": "string", "description": "Coin metal composition" },
+        "grade": { "type": "string", "description": "Assessed grade" },
+        "certification": { "type": "string", "description": "Certification authority" },
+        "price": { "type": "number", "description": "Asking price or starting bid" },
+        "currency": { "type": "string", "description": "Currency code (USD, EUR, GBP, INR, etc.)" },
+        "listingType": { "type": "string", "enum": ["FIXED_PRICE", "AUCTION", "BEST_OFFER"], "description": "Trade format" },
+        "status": { "type": "string", "enum": ["ACTIVE", "PENDING", "SOLD", "CANCELLED"], "description": "Listing lifecycle state" },
+        "currentBid": { "type": "number", "description": "Highest bid placed if auction" },
+        "bidCount": { "type": "integer", "description": "Number of bids placed" },
+        "imageUrl": { "type": "string", "description": "High resolution specimen image" },
+        "description": { "type": "string", "description": "Seller description, provenance details, and shipping terms" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Listing creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Listing update timestamp" }
+      },
+      "required": ["userId", "sellerName", "coinTitle", "country", "metal", "grade", "price", "currency", "listingType", "status", "description", "createdAt", "updatedAt"]
+    },
+    "Discussion": {
+      "title": "Discussion",
+      "description": "Community scholarly discussion or research forum thread",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Thread identifier" },
+        "userId": { "type": "string", "description": "Author UID" },
+        "authorName": { "type": "string", "description": "Author display name" },
+        "title": { "type": "string", "description": "Discussion title or inquiry question" },
+        "content": { "type": "string", "description": "Body of the discussion or research note" },
+        "category": { "type": "string", "description": "Topic category (e.g. Ancient, Medieval, Attribution Help, Conservation)" },
+        "replyCount": { "type": "integer", "description": "Number of community replies" },
+        "imageUrl": { "type": "string", "description": "Optional reference image URL" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Update timestamp" }
+      },
+      "required": ["userId", "authorName", "title", "content", "category", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profiles with strict owner-only access"
+    },
+    "/specimens/{specimenId}": {
+      "schema": { "$ref": "#/entities/Specimen" },
+      "description": "Private collection coin specimens scoped to the authenticated owner"
+    },
+    "/listings/{listingId}": {
+      "schema": { "$ref": "#/entities/Listing" },
+      "description": "Global marketplace listings readable by signed-in collectors, manageable by seller"
+    },
+    "/discussions/{discussionId}": {
+      "schema": { "$ref": "#/entities/Discussion" },
+      "description": "Community discussions readable by signed-in users, author-managed"
+    }
+  }
+}

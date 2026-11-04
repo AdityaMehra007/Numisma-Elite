@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Outer coin rim with bevel effect -->
+    <path
+        android:fillColor="#C5A059"
+        android:pathData="M54,28 A26,26 0 1,0 54,80 A26,26 0 1,0 54,28 Z" />
+    <path
+        android:fillColor="#E6C875"
+        android:pathData="M54,30 A24,24 0 1,0 54,78 A24,24 0 1,0 54,30 Z" />
+    <!-- Inner coin flan -->
+    <path
+        android:fillColor="#B88A36"
+        android:pathData="M54,33 A21,21 0 1,0 54,75 A21,21 0 1,0 54,33 Z" />
+    <path
+        android:fillColor="#D8AC46"
+        android:pathData="M54,34 A20,20 0 1,0 54,74 A20,20 0 1,0 54,34 Z" />
+    <!-- Classical Owl / Imperial Coin Relief Symbol -->
+    <!-- Owl eyes / head -->
+    <path
+        android:fillColor="#221A0F"
+        android:pathData="M48,46 A3.5,3.5 0 1,0 48,53 A3.5,3.5 0 1,0 48,46 Z" />
+    <path
+        android:fillColor="#EAD394"
+        android:pathData="M48,48 A1.5,1.5 0 1,0 48,51 A1.5,1.5 0 1,0 48,48 Z" />
+    <path
+        android:fillColor="#221A0F"
+        android:pathData="M60,46 A3.5,3.5 0 1,0 60,53 A3.5,3.5 0 1,0 60,46 Z" />
+    <path
+        android:fillColor="#EAD394"
+        android:pathData="M60,48 A1.5,1.5 0 1,0 60,51 A1.5,1.5 0 1,0 60,48 Z" />
+    <!-- Beak -->
+    <path
+        android:fillColor="#7F5B1E"
+        android:pathData="M52,50 L56,50 L54,54 Z" />
+    <!-- Owl Body & Wing -->
+    <path
+        android:fillColor="#684A16"
+        android:pathData="M49,54 C46,57 46,65 54,67 C62,65 62,57 59,54 C56,56 52,56 49,54 Z" />
+    <path
+        android:fillColor="#EAD394"
+        android:pathData="M52,57 C51,59 51,63 54,64 C57,63 57,59 56,57 Z" />
+    <!-- Olive sprig & Greek Alpha Theta Epsilon letters representation -->
+    <path
+        android:fillColor="#7F5B1E"
+        android:pathData="M41,47 C39,45 39,42 42,43 C44,44 43,46 41,47 Z" />
+    <path
+        android:fillColor="#7F5B1E"
+        android:pathData="M40,51 C38,49 38,47 41,48 C43,49 42,51 40,51 Z" />
+    <!-- Rim serrations (beaded border) -->
+    <path
+        android:fillColor="#EAD394"
+        android:pathData="M54,31 A1,1 0 1,0 54,33 A1,1 0 1,0 54,31 Z M65,34 A1,1 0 1,0 65,36 A1,1 0 1,0 65,34 Z M74,43 A1,1 0 1,0 74,45 A1,1 0 1,0 74,43 Z M77,54 A1,1 0 1,0 77,56 A1,1 0 1,0 77,54 Z M74,65 A1,1 0 1,0 74,67 A1,1 0 1,0 74,65 Z M65,74 A1,1 0 1,0 65,76 A1,1 0 1,0 65,74 Z M54,77 A1,1 0 1,0 54,79 A1,1 0 1,0 54,77 Z M43,74 A1,1 0 1,0 43,76 A1,1 0 1,0 43,74 Z M34,65 A1,1 0 1,0 34,67 A1,1 0 1,0 34,65 Z M31,54 A1,1 0 1,0 31,56 A1,1 0 1,0 31,54 Z M34,43 A1,1 0 1,0 34,45 A1,1 0 1,0 34,43 Z M43,34 A1,1 0 1,0 43,36 A1,1 0 1,0 43,34 Z" />
+</vector>

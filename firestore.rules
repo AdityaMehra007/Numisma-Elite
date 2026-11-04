@@ -1,0 +1,185 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidUserProfile(data) {
+      return data.userId is string && data.userId.size() <= 128 &&
+             data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 100 &&
+             data.email is string && data.email.size() >= 3 && data.email.size() <= 150 &&
+             data.tier in ['EXPLORER', 'COLLECTOR_ELITE', 'PROFESSIONAL', 'INSTITUTIONAL'] &&
+             (!('avatarUrl' in data) || data.avatarUrl == null || (data.avatarUrl is string && data.avatarUrl.size() <= 1000)) &&
+             (!('bio' in data) || data.bio == null || (data.bio is string && data.bio.size() <= 1000)) &&
+             (!('country' in data) || data.country == null || (data.country is string && data.country.size() <= 100));
+    }
+
+    function isValidSpecimen(data) {
+      return data.userId is string && data.userId.size() <= 128 &&
+             data.coinName is string && data.coinName.size() >= 1 && data.coinName.size() <= 200 &&
+             data.grade is string && data.grade.size() >= 1 && data.grade.size() <= 30 &&
+             data.gradingService is string && data.gradingService.size() >= 1 && data.gradingService.size() <= 30 &&
+             (!('catalogId' in data) || data.catalogId == null || (data.catalogId is string && data.catalogId.size() <= 100)) &&
+             (!('issuingAuthority' in data) || data.issuingAuthority == null || (data.issuingAuthority is string && data.issuingAuthority.size() <= 100)) &&
+             (!('era' in data) || data.era == null || (data.era is string && data.era.size() <= 100)) &&
+             (!('year' in data) || data.year == null || (data.year is string && data.year.size() <= 50)) &&
+             (!('denomination' in data) || data.denomination == null || (data.denomination is string && data.denomination.size() <= 100)) &&
+             (!('metal' in data) || data.metal == null || (data.metal is string && data.metal.size() <= 50)) &&
+             (!('certificationNumber' in data) || data.certificationNumber == null || (data.certificationNumber is string && data.certificationNumber.size() <= 50)) &&
+             (!('measuredWeightGrams' in data) || data.measuredWeightGrams == null || data.measuredWeightGrams is number) &&
+             (!('measuredDiameterMm' in data) || data.measuredDiameterMm == null || data.measuredDiameterMm is number) &&
+             (!('acquisitionCost' in data) || data.acquisitionCost == null || data.acquisitionCost is number) &&
+             (!('acquisitionCurrency' in data) || data.acquisitionCurrency == null || (data.acquisitionCurrency is string && data.acquisitionCurrency.size() <= 10)) &&
+             (!('acquisitionDate' in data) || data.acquisitionDate == null || (data.acquisitionDate is string && data.acquisitionDate.size() <= 50)) &&
+             (!('currentEstimatedValue' in data) || data.currentEstimatedValue == null || data.currentEstimatedValue is number) &&
+             (!('provenance' in data) || data.provenance == null || (data.provenance is string && data.provenance.size() <= 2000)) &&
+             (!('notes' in data) || data.notes == null || (data.notes is string && data.notes.size() <= 2000)) &&
+             (!('imageUrl' in data) || data.imageUrl == null || (data.imageUrl is string && data.imageUrl.size() <= 1000)) &&
+             (!('isForSale' in data) || data.isForSale == null || data.isForSale is bool);
+    }
+
+    function isValidListing(data) {
+      return data.userId is string && data.userId.size() <= 128 &&
+             data.sellerName is string && data.sellerName.size() >= 1 && data.sellerName.size() <= 100 &&
+             data.coinTitle is string && data.coinTitle.size() >= 1 && data.coinTitle.size() <= 200 &&
+             data.country is string && data.country.size() >= 1 && data.country.size() <= 100 &&
+             data.metal is string && data.metal.size() >= 1 && data.metal.size() <= 50 &&
+             data.grade is string && data.grade.size() >= 1 && data.grade.size() <= 30 &&
+             data.price is number && data.price >= 0 &&
+             data.currency is string && data.currency.size() <= 10 &&
+             data.listingType in ['FIXED_PRICE', 'AUCTION', 'BEST_OFFER'] &&
+             data.status in ['ACTIVE', 'PENDING', 'SOLD', 'CANCELLED'] &&
+             data.description is string && data.description.size() <= 5000 &&
+             (!('specimenId' in data) || data.specimenId == null || (data.specimenId is string && data.specimenId.size() <= 128)) &&
+             (!('certification' in data) || data.certification == null || (data.certification is string && data.certification.size() <= 50)) &&
+             (!('currentBid' in data) || data.currentBid == null || data.currentBid is number) &&
+             (!('bidCount' in data) || data.bidCount == null || data.bidCount is int) &&
+             (!('imageUrl' in data) || data.imageUrl == null || (data.imageUrl is string && data.imageUrl.size() <= 1000));
+    }
+
+    function isValidDiscussion(data) {
+      return data.userId is string && data.userId.size() <= 128 &&
+             data.authorName is string && data.authorName.size() >= 1 && data.authorName.size() <= 100 &&
+             data.title is string && data.title.size() >= 1 && data.title.size() <= 200 &&
+             data.content is string && data.content.size() >= 1 && data.content.size() <= 5000 &&
+             data.category is string && data.category.size() >= 1 && data.category.size() <= 50 &&
+             (!('replyCount' in data) || data.replyCount == null || data.replyCount is int) &&
+             (!('imageUrl' in data) || data.imageUrl == null || (data.imageUrl is string && data.imageUrl.size() <= 1000));
+    }
+
+    // Collections
+    match /users/{userId} {
+      allow get: if isSignedIn() && request.auth.uid == userId;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() &&
+                       request.auth.uid == userId &&
+                       incoming().userId == request.auth.uid &&
+                       incoming().keys().hasAll(['userId', 'displayName', 'email', 'tier', 'createdAt', 'updatedAt']) &&
+                       incoming().createdAt is timestamp &&
+                       incoming().createdAt <= request.time &&
+                       isValidUserProfile(incoming());
+      allow update: if isSignedIn() &&
+                       request.auth.uid == userId &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().updatedAt is timestamp &&
+                       incoming().updatedAt <= request.time &&
+                       isValidUserProfile(incoming()) &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'avatarUrl', 'bio', 'country', 'tier', 'updatedAt']);
+      allow delete: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    match /specimens/{specimenId} {
+      allow get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() &&
+                       incoming().userId == request.auth.uid &&
+                       isValidId(specimenId) &&
+                       incoming().keys().hasAll(['userId', 'coinName', 'grade', 'gradingService', 'createdAt', 'updatedAt']) &&
+                       incoming().createdAt is timestamp &&
+                       incoming().createdAt <= request.time &&
+                       isValidSpecimen(incoming());
+      allow update: if isSignedIn() &&
+                       existing().userId == request.auth.uid &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().updatedAt is timestamp &&
+                       incoming().updatedAt <= request.time &&
+                       isValidSpecimen(incoming()) &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'coinName', 'catalogId', 'issuingAuthority', 'era', 'year',
+                         'denomination', 'metal', 'grade', 'gradingService', 'certificationNumber',
+                         'measuredWeightGrams', 'measuredDiameterMm', 'acquisitionCost', 'acquisitionCurrency',
+                         'acquisitionDate', 'currentEstimatedValue', 'provenance', 'notes', 'imageUrl',
+                         'isForSale', 'updatedAt'
+                       ]);
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    match /listings/{listingId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() &&
+                       incoming().userId == request.auth.uid &&
+                       isValidId(listingId) &&
+                       incoming().keys().hasAll(['userId', 'sellerName', 'coinTitle', 'country', 'metal', 'grade', 'price', 'currency', 'listingType', 'status', 'description', 'createdAt', 'updatedAt']) &&
+                       incoming().createdAt is timestamp &&
+                       incoming().createdAt <= request.time &&
+                       isValidListing(incoming());
+      allow update: if isSignedIn() &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().updatedAt is timestamp &&
+                       incoming().updatedAt <= request.time &&
+                       isValidListing(incoming()) &&
+                       (
+                         (existing().userId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['price', 'status', 'description', 'imageUrl', 'updatedAt'])) ||
+                         incoming().diff(existing()).affectedKeys().hasOnly(['currentBid', 'bidCount', 'updatedAt'])
+                       );
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    match /discussions/{discussionId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() &&
+                       incoming().userId == request.auth.uid &&
+                       isValidId(discussionId) &&
+                       incoming().keys().hasAll(['userId', 'authorName', 'title', 'content', 'category', 'createdAt', 'updatedAt']) &&
+                       incoming().createdAt is timestamp &&
+                       incoming().createdAt <= request.time &&
+                       isValidDiscussion(incoming());
+      allow update: if isSignedIn() &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().updatedAt is timestamp &&
+                       incoming().updatedAt <= request.time &&
+                       isValidDiscussion(incoming()) &&
+                       (
+                         (existing().userId == request.auth.uid && incoming().diff(existing()).affectedKeys().hasOnly(['title', 'content', 'category', 'imageUrl', 'updatedAt'])) ||
+                         incoming().diff(existing()).affectedKeys().hasOnly(['replyCount', 'updatedAt'])
+                       );
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+  }
+}

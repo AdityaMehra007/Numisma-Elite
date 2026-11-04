@@ -1,0 +1,6 @@
+{
+  "name": "Numisma Elite",
+  "description": "The world's most advanced coin intelligence, authentication, valuation, collecting vault, and global numismatic marketplace ecosystem.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
